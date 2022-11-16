@@ -1,7 +1,10 @@
 import re
+import time
 
 import discord
 from discord.ext import commands, tasks
+
+import leetcode_client
 from config import token
 
 intents = discord.Intents.default()
@@ -32,9 +35,13 @@ async def submit(ctx):
         await ctx.send("Invalid cold format! Please send code in the following format:\n" +
                        "\\`\\`\\`language\n #your code\n \\`\\`\\`")
         return
+    submission = leetcode_client.submit(m.group('code'))
+    time.sleep(5)
+    result = leetcode_client.check_submission_result(submission)
+    await ctx.send(result)
 
-    await ctx.send("language:" + m.group('language'))
-    await ctx.send("code:\n" + m.group('code'))
+    # await ctx.send("language:" + m.group('language'))
+    # await ctx.send("code:\n" + m.group('code'))
 
 
 @tasks.loop(seconds=10)
