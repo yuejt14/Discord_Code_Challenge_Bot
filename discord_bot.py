@@ -1,3 +1,5 @@
+import re
+
 import discord
 from discord.ext import commands, tasks
 from config import token
@@ -12,13 +14,27 @@ bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
 async def on_ready():
     print(f'logged in as {bot.user}')
     print('----------')
-    repeating_task.start()
+    # repeating_task.start()
 
 
 @bot.command()
 async def test(ctx):
     print('Command invoked')
     await ctx.send("hello")
+
+
+@bot.command()
+async def submit(ctx):
+    print("submitted")
+    pattern = r'```(?P<language>\S+)\n(?P<code>[\s\S]*)```'
+    m = re.search(pattern, ctx.message.clean_content)
+    if not bool(m):
+        await ctx.send("Invalid cold format! Please send code in the following format:\n" +
+                       "\\`\\`\\`language\n #your code\n \\`\\`\\`")
+        return
+
+    await ctx.send("language:" + m.group('language'))
+    await ctx.send("code:\n" + m.group('code'))
 
 
 @tasks.loop(seconds=10)
