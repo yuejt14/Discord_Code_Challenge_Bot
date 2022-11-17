@@ -7,5 +7,7 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
+.env
+
 #config file
 config.py

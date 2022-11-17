@@ -1,3 +1,4 @@
+import os
 import re
 import time
 
@@ -5,7 +6,7 @@ import discord
 from discord.ext import commands, tasks
 
 import leetcode_client
-from config import token
+# from config import token
 
 intents = discord.Intents.default()
 
@@ -29,15 +30,18 @@ async def test(ctx):
 @bot.command()
 async def submit(ctx):
     print("submitted")
-    pattern = r'```(?P<language>\S+)\n(?P<code>[\s\S]*)```'
+    await ctx.send('Received submission, please wait for your result...')
+
+    pattern = r'```(?P<lang>\S+)\n(?P<code>[\s\S]*)```'
     m = re.search(pattern, ctx.message.clean_content)
     if not bool(m):
         await ctx.send("Invalid cold format! Please send code in the following format:\n" +
                        "\\`\\`\\`language\n #your code\n \\`\\`\\`")
         return
-    submission = leetcode_client.submit(m.group('code'))
+    submission = leetcode_client.submit(m.group('code'), m.group('lang'))
     time.sleep(5)
     result = leetcode_client.check_submission_result(submission)
+
     await ctx.send(result)
 
     # await ctx.send("language:" + m.group('language'))
@@ -56,5 +60,5 @@ async def before_repeating_task():
     await bot.wait_until_ready()
 
 
-bot.run(token)
+bot.run(os.getenv('DISCORD_TOKEN'))
 
