@@ -1,12 +1,12 @@
 import os
 import re
 import time
-
 import discord
 from discord.ext import commands, tasks
-
 import leetcode_client
-# from config import token
+from dotenv import load_dotenv
+
+load_dotenv()
 
 intents = discord.Intents.default()
 
@@ -41,11 +41,7 @@ async def submit(ctx):
     submission = leetcode_client.submit(m.group('code'), m.group('lang'))
     time.sleep(5)
     result = leetcode_client.check_submission_result(submission)
-
     await ctx.send(result)
-
-    # await ctx.send("language:" + m.group('language'))
-    # await ctx.send("code:\n" + m.group('code'))
 
 
 @tasks.loop(seconds=10)
@@ -61,4 +57,3 @@ async def before_repeating_task():
 
 
 bot.run(os.getenv('DISCORD_TOKEN'))
-

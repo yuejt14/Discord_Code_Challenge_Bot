@@ -1,8 +1,10 @@
 import common
 import json
 import os
-
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_URL = 'https://leetcode.com'
 API_URL = BASE_URL + '/api/problems/algorithms/'
@@ -37,17 +39,14 @@ problem = {
 cookies = {
     'csrftoken': os.getenv('CSRF_TOKEN'),
     'LEETCODE_SESSION': os.getenv('LEETCODE_SESSION'),
-
 }
 
+
 def submit(code: str, lang: str):
-    # from config import cookies
-
-
     body = {'question_id': problem['stat']['question_id'],
             'lang': common.get_lang(lang),
             'typed_code': code}
-
+    print(cookies)
     headers = {
         'origin': BASE_URL,
         'Referer': SUBMISSION_URL.format(question_title_slug=problem['stat']['question__title_slug']),
@@ -79,7 +78,6 @@ def check_submission_result(submission_id):
 
 
 def retrieve(url, headers=None, method='GET', data=None):
-    # from config import cookies
     r = None
     if method == 'GET':
         r = requests.get(url, headers=headers, cookies=cookies)
