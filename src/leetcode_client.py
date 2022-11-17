@@ -8,9 +8,11 @@ load_dotenv()
 
 BASE_URL = 'https://leetcode.com'
 API_URL = BASE_URL + '/api/problems/algorithms/'
+QUESTION_URL = BASE_URL + '/problems/{question_title_slug}'
 SUBMIT_URL = BASE_URL + '/problems/{question_title_slug}/submit/'
 SUBMISSION_URL = BASE_URL + '/problems/{question_title_slug}/submissions'
 SUBMISSION_CHECK_URL = BASE_URL + '/submissions/detail/{id}/check'
+GRAPHQL_URL = BASE_URL + '/graphql'
 
 problem = {
     "stat": {
@@ -40,6 +42,60 @@ cookies = {
     'csrftoken': os.getenv('CSRF_TOKEN'),
     'LEETCODE_SESSION': os.getenv('LEETCODE_SESSION'),
 }
+
+
+def get_info():
+    query = """query questionData($titleSlug: String!) {
+        question(titleSlug: $titleSlug) {
+            title
+            titleSlug
+            questionId
+            questionFrontendId
+            content
+            difficulty
+            stats
+            companyTagStats
+            topicTags {
+                name
+                slug
+                __typename
+            }
+            similarQuestions
+            codeSnippets {
+                lang
+                langSlug
+                code
+                __typename
+            }
+            solution {
+                id
+                canSeeDetail
+                __typename
+            }
+            sampleTestCase
+            enableTestMode
+            metaData
+            enableRunCode
+            judgerAvailable
+            __typename
+        }
+    }"""
+    headers = {
+        'origin': BASE_URL,
+        'Referer': QUESTION_URL.format(question_title_slug=problem['stat']['question__title_slug']),
+        'Content-Type': 'application/json',
+        'X-CSRFToken': cookies['csrftoken'],
+    }
+    body = {
+        "query": query,
+        "variables": {"titleSlug": problem['stat']['question__title_slug']},
+        "operationName": "questionData"
+    }
+
+    r = retrieve(GRAPHQL_URL, headers, method='POST', data=json.dumps(body))
+    obj = json.loads(r.text)
+
+    print(r.text)
 
 
 def submit(code: str, lang: str):
@@ -95,3 +151,5 @@ print(SUBMISSION_URL.format(question_title_slug=problem['stat']['question__title
 #
 # r = check_submission_result(sub_id)
 # print(r)
+
+get_info()
