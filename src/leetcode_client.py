@@ -16,16 +16,16 @@ GRAPHQL_URL = BASE_URL + '/graphql'
 
 problem = {
     "stat": {
-        "question_id": 2,
+        "question_id": 3,
         "question__article__live": True,
-        "question__article__slug": "add-two-numbers",
-        "question__article__has_video_solution": False,
-        "question__title": "Add Two Numbers",
-        "question__title_slug": "add-two-numbers",
+        "question__article__slug": "longest-substring-without-repeating-characters",
+        "question__article__has_video_solution": True,
+        "question__title": "Longest Substring Without Repeating Characters",
+        "question__title_slug": "longest-substring-without-repeating-characters",
         "question__hide": False,
-        "total_acs": 3250008,
-        "total_submitted": 8164227,
-        "frontend_question_id": 2,
+        "total_acs": 4027268,
+        "total_submitted": 11916587,
+        "frontend_question_id": 3,
         "is_new_question": False
     },
     "status": "ac",
