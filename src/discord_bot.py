@@ -18,13 +18,10 @@ bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
 async def on_ready():
     print(f'logged in as {bot.user}')
     print('----------')
-    # repeating_task.start()
 
-
-@bot.command()
-async def test(ctx):
-    print('Command invoked')
-    await ctx.send("hello")
+    from config import channels
+    general = bot.get_channel(channels.get('general'))
+    await general.send('Haker Bot is online')
 
 
 @bot.command()
@@ -39,9 +36,9 @@ async def submit(ctx):
                        "\\`\\`\\`language\n #your code\n \\`\\`\\`")
         return
     submission = leetcode_client.submit(m.group('code'), m.group('lang'))
-    time.sleep(5)
-    result = leetcode_client.check_submission_result(submission)
-    await ctx.send(result)
+    # time.sleep(5)
+    # result = leetcode_client.check_submission_result(submission)
+    await ctx.send("tset")
 
 
 @tasks.loop(seconds=10)
