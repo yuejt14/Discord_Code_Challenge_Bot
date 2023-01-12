@@ -84,15 +84,14 @@ def submit(code: str, lang: str, problem, cookies):
         'Content-Type': 'application/json',
         'X-CSRFToken': cookies['csrftoken'],
     }
+
     submit_url = SUBMIT_URL.format(question_title_slug=problem['stat']['question__title_slug'])
     r = retrieve(submit_url, method='POST', data=json.dumps(body),
                  headers=headers, cookies=cookies)
+
     text = r.text.encode('utf-8')
-    print(text)
-
     data = json.loads(text)
-
-    return data['submission_id']
+    return data
 
 
 def check_submission_result(submission_id, cookies):
@@ -104,10 +103,7 @@ def check_submission_result(submission_id, cookies):
         return "Request Failed!"
     text = r.text.encode('utf-8')
     data = json.loads(text)
-    if data['run_success']:
-        return f'Success!\nRuntime: {data["status_runtime"]} memory: {data["memory"]}'
-    else:
-        return r.text
+    return data
 
 
 def retrieve(url, cookies, headers=None, method='GET', data=None, ):
